@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+.AuthUI {
+  text-align: center;
+}
+
+.navbar {
+  overflow: hidden;
+  background-color: #0099CC;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}

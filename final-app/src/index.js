@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-// import App from './App';
+import App from './App';
 import reportWebVitals from './reportWebVitals';
-import AuthUI from './components/Auth/AuthUI'
+// import AuthUI from './components/Auth/AuthUI'
 
 ReactDOM.render(
   <React.StrictMode>
-    <AuthUI />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );

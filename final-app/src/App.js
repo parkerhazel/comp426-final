@@ -1,23 +1,81 @@
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
+import firebase from 'firebase/app'
+import * as firebaseui from 'firebaseui'
+import '../node_modules/firebaseui/dist/firebaseui.css'
+
+export let globalUser = null;
+
+var firebaseConfig = {
+  apiKey: "AIzaSyB3AtoaMQJ_pbWee_EBeG53vaufootQryg",
+  authDomain: "comp426-final-phazel.firebaseapp.com",
+  databaseURL: "https://comp426-final-phazel-default-rtdb.firebaseio.com",
+  projectId: "comp426-final-phazel",
+  storageBucket: "comp426-final-phazel.appspot.com",
+  messagingSenderId: "271337286164",
+  appId: "1:271337286164:web:21471fe847bcc963839501",
+  measurementId: "G-FZBNX488C6"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+var ui = new firebaseui.auth.AuthUI(firebase.auth());
+
+let view;
+
 
 function App() {
+  let [user, setUser] = useState(null);
+
+  if (globalUser == null) {
+    var uiConfig = {
+      callbacks: {
+        signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+          // User successfully signed in.
+          // Return type determines whether we continue the redirect automatically
+          // or whether we leave that to developer to handle.
+          setUser(() => {
+            globalUser = authResult.user
+            return authResult.user
+          });
+          return false;
+        },
+        uiShown: function() {
+          // The widget is rendered.
+          // Hide the loader.
+          document.getElementById('loader').style.display = 'none';
+        }
+      },
+      // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+      signInFlow: 'popup',
+      signInSuccessUrl: '/',
+      signInOptions: [
+        // Leave the lines as is for the providers you want to offer your users.
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+        firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+        firebase.auth.GithubAuthProvider.PROVIDER_ID,
+        firebase.auth.EmailAuthProvider.PROVIDER_ID,
+        firebase.auth.PhoneAuthProvider.PROVIDER_ID
+      ],
+    };
+    
+    ui.start('#firebaseui-auth-container', uiConfig);
+
+    view = (<div className='AuthUI'>
+              <h1>Welcome to My Awesome App</h1>
+              <div id="firebaseui-auth-container"></div>
+              <div id="loader">Loading...</div>
+            </div>)
+  } else {
+    view = <h1 className='AuthUI'>Hello {user.displayName}!</h1>
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='app'>
+      <div className='navbar'>
+        <h2 style={{position : 'absolute', top : '0', right : '0'}}>Logout</h2>
+      </div>
+      {view}
     </div>
   );
 }
