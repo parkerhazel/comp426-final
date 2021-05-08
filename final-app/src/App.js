@@ -4,6 +4,7 @@ import firebase from 'firebase/app'
 import * as firebaseui from 'firebaseui'
 import '../node_modules/firebaseui/dist/firebaseui.css'
 import Photo from './Photo';
+import RandomJoke from './RandomJoke'
 
 export let globalUser = null;
 
@@ -23,7 +24,7 @@ var ui = new firebaseui.auth.AuthUI(firebase.auth());
 
 // let view;
 
-const navOptions = ['Home','Sign In', 'Sign Out']
+const navOptions = ['Home', 'Random Joke','Sign In', 'Sign Out']
 
 
 function App() {
@@ -105,16 +106,39 @@ function App() {
       // An error happened.
       alert(`Unsuccessful Sign Out\n ${error}`)
     });
-  } else {
+  } else if (selected === 'Home') {
     
     view = <Photo />
 
+  } else {
+    view = <RandomJoke />
   }
   let userName = ''
   if (user !== null) {
     userName = user.displayName;
   }
-  if (selected !== 'Sign In') {
+  if (selected === 'Random Joke') {
+    return (
+      <div className='app'>
+        <div className='navbar'>
+          <div className='buttonHolder'>
+            {navOptions.map(option => {
+                if (option === 'Sign In' && user !== null) {
+                  return null;
+                }
+                if (option === 'Sign Out' && user === null) {
+                  return null;
+                }
+                return <button className='navButton' value={option} onClick={handleNavButtonClick} id={option} key={option} disabled={selected === option}>{option}</button>
+            })}      
+          </div>
+        </div>
+        {/* <h1>Welcome to my Random Photos Page!</h1> */}
+        <h1 style={{marginLeft: 'auto', marginRight: 'auto', width: '50%'}}>Welcome {userName} to my Random Joke Page!</h1>
+        {view}
+      </div>
+    )
+  } else if (selected !== 'Sign In') {
     return (
       <div className='app'>
         <div className='navbar'>
