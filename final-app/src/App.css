@@ -44,7 +44,16 @@
 .navbar {
   overflow: hidden;
   background-color: #0099CC;
-  position: fixed;
+  height: 60px;
   top: 0;
   width: 100%;
+  display: flex;
 }
+/* 
+.navbar {
+  background-color: #0099CC;
+  height: 60px;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+} */

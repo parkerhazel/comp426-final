@@ -3,6 +3,7 @@ import './App.css';
 import firebase from 'firebase/app'
 import * as firebaseui from 'firebaseui'
 import '../node_modules/firebaseui/dist/firebaseui.css'
+import Photo from './Photo';
 
 export let globalUser = null;
 
@@ -20,13 +21,27 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 var ui = new firebaseui.auth.AuthUI(firebase.auth());
 
-let view;
+// let view;
+
+const navOptions = ['Home','Sign In']
 
 
 function App() {
   let [user, setUser] = useState(null);
+  let [selected, setSelected] = useState('Home');
+  let [view, setView] = useState(null);
 
-  if (globalUser == null) {
+  const handleNavButtonClick = ({target}) => {
+    setSelected((prevSelected) => {
+      if (prevSelected === target.value) {
+          return prevSelected;
+      } else {
+          return target.value;
+      }
+    })
+  }
+
+  if (selected === 'Sign In' && globalUser === null) {
     var uiConfig = {
       callbacks: {
         signInSuccessWithAuthResult: function(authResult, redirectUrl) {
@@ -34,9 +49,15 @@ function App() {
           // Return type determines whether we continue the redirect automatically
           // or whether we leave that to developer to handle.
           setUser(() => {
-            globalUser = authResult.user
-            return authResult.user
+            globalUser = authResult.user;
+            return authResult.user;
           });
+          setSelected(() => {
+            return 'Home';
+          })
+          setView(() => {
+            return <Photo />
+          })
           return false;
         },
         uiShown: function() {
@@ -59,25 +80,45 @@ function App() {
       ],
     };
     
-    ui.start('#firebaseui-auth-container', uiConfig);
-
     view = (<div className='AuthUI'>
-              <h1>Welcome to My Awesome App</h1>
+              <h1>Please Sign In or Create an Account!</h1>
               <div id="firebaseui-auth-container"></div>
               <div id="loader">Loading...</div>
             </div>)
-  } else {
-    view = <h1 className='AuthUI'>Hello {user.displayName}!</h1>
-  }
 
-  return (
-    <div className='app'>
-      <div className='navbar'>
-        <h2 style={{position : 'absolute', top : '0', right : '0'}}>Logout</h2>
+    setTimeout(function(){ ui.start('#firebaseui-auth-container', uiConfig); }, 500);
+
+  } else {
+    
+    view = <Photo />
+
+  }
+  if (selected !== 'Sign In') {
+    return (
+      <div className='app'>
+        <div className='navbar'>
+          <div className='buttonHolder'>
+            {navOptions.map(option => {
+                if (option === 'Sign In' && user !== null) {
+                  return <button className='navButton' value={option} onClick={handleNavButtonClick} id={option} key={option} disabled={selected === option}>Sign Out</button>
+                }
+                return <button className='navButton' value={option} onClick={handleNavButtonClick} id={option} key={option} disabled={selected === option}>{option}</button>
+            })}      
+          </div>
+        </div>
+        {view}
       </div>
-      {view}
-    </div>
-  );
+    )
+  } else {
+    return (
+      <div className='app'>
+        <div className='navbar'>
+          <h2 style={{position : 'absolute', top : '0', right : '0'}}>Logout</h2>
+        </div>
+        {view}
+      </div>
+    );
+  }
 }
 
 export default App;

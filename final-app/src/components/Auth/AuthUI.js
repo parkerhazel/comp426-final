@@ -1,6 +1,7 @@
 import './AuthUI.css'
 import firebase from 'firebase/app'
 import * as firebaseui from 'firebaseui'
+import {globalUser} from '../../App.js'
 
 // var firebase = require('firebase');
 // var firebaseui = require('firebaseui');
@@ -17,13 +18,16 @@ var firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 var ui = new firebaseui.auth.AuthUI(firebase.auth());
+// export const db = firebase.database();
 
-ui.start('#firebaseui-auth-container', {
-  signInOptions: [
-    firebase.auth.EmailAuthProvider.PROVIDER_ID
-  ],
-  // Other config options...
-});
+// ui.start('#firebaseui-auth-container', {
+//   signInOptions: [
+//     firebase.auth.EmailAuthProvider.PROVIDER_ID
+//   ],
+//   // Other config options...
+// });
+console.log('AuthUI');
+console.log(globalUser);
 
 var uiConfig = {
   callbacks: {
@@ -31,6 +35,12 @@ var uiConfig = {
       // User successfully signed in.
       // Return type determines whether we continue the redirect automatically
       // or whether we leave that to developer to handle.
+      globalUser = authResult.user;
+      console.log(globalUser)
+      // var credential = authResult.credential;
+      // var isNewUser = authResult.additionalUserInfo.isNewUser;
+      // var providerId = authResult.additionalUserInfo.providerId;
+      // var operationType = authResult.operationType;
       return true;
     },
     uiShown: function() {
