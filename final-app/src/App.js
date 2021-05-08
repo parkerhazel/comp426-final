@@ -73,11 +73,11 @@ function App() {
       signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-        firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-        firebase.auth.GithubAuthProvider.PROVIDER_ID,
+        // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+        // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+        // firebase.auth.GithubAuthProvider.PROVIDER_ID,
         firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        firebase.auth.PhoneAuthProvider.PROVIDER_ID
+        // firebase.auth.PhoneAuthProvider.PROVIDER_ID
       ],
     };
     
@@ -165,12 +165,12 @@ function App() {
         <div className='navbar'>
         {navOptions.map(option => {
             if (option === 'Sign In') {
-              return <button className='navButton' value={option} onClick={handleNavButtonClick} id={option} key={option} disabled={selected === option}>Sign Out</button>
+              return <button className='navButton' style={{all: 'none'}} value={option} onClick={handleNavButtonClick} id={option} key={option} disabled={selected === option}>Sign Out</button>
             }
             if (option === 'Sign Out' && user === null) {
               return null
             }
-            return <button className='navButton' value={option} onClick={handleNavButtonClick} id={option} key={option} disabled={selected === option}>{option}</button>
+            return <button className='navButton' style={{all: 'none'}} value={option} onClick={handleNavButtonClick} id={option} key={option} disabled={selected === option}>{option}</button>
         })}  
           {/* <h2 style={{position : 'absolute', top : '0', right : '0'}}>Logout</h2> */}
         </div>

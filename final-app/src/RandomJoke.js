@@ -6,7 +6,7 @@ function RandomJoke() {
 
     const options = {
         method: 'GET',
-        url: 'https://jokeapi-v2.p.rapidapi.com/joke/Any',
+        url: 'https://jokeapi-v2.p.rapidapi.com/joke/Programming',
         params: {
           type: 'twopart',
           format: 'json',
