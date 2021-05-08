@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import axios from 'axios'
 
-let runOnce = true;
+// let runOnce = true;
 
 function Photo() {
-    let [view, setView] = useState(null);
+    const [view, setView] = useState(null);
     let randomPage = Math.floor(Math.random() * 10)
 
     const potd = {
@@ -35,11 +35,12 @@ function Photo() {
             temp.sort(() => Math.random() - 0.5);
             return (temp);
         });
-        runOnce = false;
+        // runOnce = false;
     }
 
-    if (runOnce) {
+    if (view === null) {
         getPotd()
+        // runOnce = false;
     }
 //style={{display: 'block', 'margin-left': 'auto', 'margin-right': 'auto', width: '50%'}}
     return (
