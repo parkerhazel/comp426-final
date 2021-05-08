@@ -23,7 +23,7 @@ var ui = new firebaseui.auth.AuthUI(firebase.auth());
 
 // let view;
 
-const navOptions = ['Home','Sign In']
+const navOptions = ['Home','Sign In', 'Sign Out']
 
 
 function App() {
@@ -88,10 +88,31 @@ function App() {
 
     setTimeout(function(){ ui.start('#firebaseui-auth-container', uiConfig); }, 500);
 
+  } else if (selected === 'Sign Out' && globalUser !== null) {
+    firebase.auth().signOut().then(() => {
+      // Sign-out successful.
+      setUser(() => {
+        globalUser = null;
+        return null;
+      });
+      setSelected(() => {
+        return 'Home';
+      })
+      setView(() => {
+        return <Photo />
+      })
+    }).catch((error) => {
+      // An error happened.
+      alert(`Unsuccessful Sign Out\n ${error}`)
+    });
   } else {
     
     view = <Photo />
 
+  }
+  let userName = ''
+  if (user !== null) {
+    userName = user.displayName;
   }
   if (selected !== 'Sign In') {
     return (
@@ -100,12 +121,17 @@ function App() {
           <div className='buttonHolder'>
             {navOptions.map(option => {
                 if (option === 'Sign In' && user !== null) {
-                  return <button className='navButton' value={option} onClick={handleNavButtonClick} id={option} key={option} disabled={selected === option}>Sign Out</button>
+                  return null;
+                }
+                if (option === 'Sign Out' && user === null) {
+                  return null;
                 }
                 return <button className='navButton' value={option} onClick={handleNavButtonClick} id={option} key={option} disabled={selected === option}>{option}</button>
             })}      
           </div>
         </div>
+        {/* <h1>Welcome to my Random Photos Page!</h1> */}
+        <h1 style={{marginLeft: 'auto', marginRight: 'auto', width: '50%'}}>Welcome {userName} to my Random Photos Page!</h1>
         {view}
       </div>
     )
@@ -113,7 +139,16 @@ function App() {
     return (
       <div className='app'>
         <div className='navbar'>
-          <h2 style={{position : 'absolute', top : '0', right : '0'}}>Logout</h2>
+        {navOptions.map(option => {
+            if (option === 'Sign In') {
+              return <button className='navButton' value={option} onClick={handleNavButtonClick} id={option} key={option} disabled={selected === option}>Sign Out</button>
+            }
+            if (option === 'Sign Out' && user === null) {
+              return null
+            }
+            return <button className='navButton' value={option} onClick={handleNavButtonClick} id={option} key={option} disabled={selected === option}>{option}</button>
+        })}  
+          {/* <h2 style={{position : 'absolute', top : '0', right : '0'}}>Logout</h2> */}
         </div>
         {view}
       </div>
